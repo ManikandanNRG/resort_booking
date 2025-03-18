@@ -1,0 +1,9 @@
+# Logs
+logs/
+*.log
+
+# Environment
+.env
+
+# Test coverage
+coverage/
