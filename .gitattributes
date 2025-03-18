@@ -1,21 +1,15 @@
 # Set default behavior to automatically normalize line endings
 * text=auto
 
-# Force batch scripts to always use CRLF line endings
-*.{cmd,[cC][mM][dD]} text eol=crlf
-*.{bat,[bB][aA][tT]} text eol=crlf
+# Backend Models
+backend/models/*.js text eol=lf
+backend/models/**/*.js text eol=lf
 
 # Node.js files
+node_modules/** -text
 **/node_modules/** -text
 package.json text eol=lf
 package-lock.json text eol=lf
-.package-lock.json text eol=lf
-nodemon.json text eol=lf
-
-# Backend specific files
-backend/server.js text eol=lf
-backend/src/**/*.js text eol=lf
-backend/config/**/*.js text eol=lf
 
 # JavaScript files
 *.js text eol=lf
