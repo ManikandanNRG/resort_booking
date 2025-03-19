@@ -1,4 +1,10 @@
+// Change this line
 const sequelize = require('../src/config/database');
+// To this
+const { Sequelize } = require('sequelize');
+const config = require('../src/config/database');
+const env = process.env.NODE_ENV || 'development';
+const sequelize = new Sequelize(config[env]);
 
 // Import all models
 const Amenity = require('./Amenity');
@@ -112,6 +118,29 @@ ResortAdmin.belongsTo(User, { foreignKey: 'user_id' });
 // Many-to-Many Relationships
 Promotion.belongsToMany(RoomType, { through: 'PromotionRoomTypes' });
 RoomType.belongsToMany(Promotion, { through: 'PromotionRoomTypes' });
+
+// Update many-to-many relationships
+Resort.belongsToMany(RoomType, { 
+  through: 'ResortRoomTypes', 
+  foreignKey: 'resort_id',
+  timestamps: true 
+});
+
+Booking.belongsToMany(Room, { 
+  through: 'BookingRooms', 
+  foreignKey: 'booking_id',
+  timestamps: true 
+});
+
+RoomType.belongsToMany(Amenity, { 
+  through: 'RoomTypeAmenities',
+  timestamps: true 
+});
+
+Promotion.belongsToMany(RoomType, { 
+  through: 'PromotionRoomTypes',
+  timestamps: true 
+});
 
 // Export models and relationships
 module.exports = {

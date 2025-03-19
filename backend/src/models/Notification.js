@@ -1,8 +1,8 @@
 const { DataTypes, Op } = require('sequelize');
-const sequelize = require('../src/config/database');
+const sequelize = require('../config/database');
 const User = require('./User');
 
-const Notification = sequelize.define('Notification', {
+const Notification = sequelize.define('notification', {
   id: {
     type: DataTypes.UUID,
     defaultValue: DataTypes.UUIDV4,

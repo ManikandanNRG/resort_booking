@@ -1,36 +1,39 @@
+require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-const morgan = require('morgan');
-const helmet = require('helmet');
-const sequelize = require('./src/config/database');
-require('dotenv').config();
+const { Sequelize } = require('sequelize');
+const config = require('./src/config/database');
 
 const app = express();
+const PORT = process.env.PORT || 5000;
 
 // Middleware
 app.use(cors());
-app.use(helmet());
-app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Test DB Connection
-sequelize.authenticate()
-  .then(() => console.log('Database connected successfully'))
-  .catch(err => console.error('Unable to connect to the database:', err));
+// Database connection
+const env = process.env.NODE_ENV || 'development';
+const sequelize = new Sequelize(config[env]);
 
-// Basic route
+// Test database connection
+async function testConnection() {
+  try {
+    await sequelize.authenticate();
+    console.log('Database connection has been established successfully.');
+  } catch (error) {
+    console.error('Unable to connect to the database:', error);
+  }
+}
+
+testConnection();
+
+// Routes (to be added later)
 app.get('/', (req, res) => {
   res.json({ message: 'Welcome to Resort Booking API' });
 });
 
-// Error handling middleware
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).send('Something broke!');
-});
-
-const PORT = process.env.PORT || 5000;
+// Start server
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });

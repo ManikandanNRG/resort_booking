@@ -1,8 +1,8 @@
 const { DataTypes } = require('sequelize');
-const sequelize = require('../src/config/database');
+const sequelize = require('../config/database');  // Fixed path
 const Resort = require('./Resort');
 
-const Amenity = sequelize.define('Amenity', {
+const Amenity = sequelize.define('amenity', {
   // ... existing id and resort_id fields ...
 
   name: {

@@ -1,9 +1,9 @@
 const { DataTypes } = require('sequelize');
-const sequelize = require('../src/config/database');
+const sequelize = require('../config/database');
 const Resort = require('./Resort');
 const Room = require('./Room');
 
-const AutomatedPricing = sequelize.define('AutomatedPricing', {
+const AutomatedPricing = sequelize.define('automatedpricing', {
   id: {
     type: DataTypes.UUID,
     defaultValue: DataTypes.UUIDV4,

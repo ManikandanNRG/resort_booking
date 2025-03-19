@@ -1,8 +1,8 @@
 const { DataTypes } = require('sequelize');
-const sequelize = require('../src/config/database');
+const sequelize = require('../config/database');
 const User = require('./User'); // Import User model for association
 
-const Resort = sequelize.define('Resort', {
+const Resort = sequelize.define('resort', { // Changed to lowercase
   id: {
     type: DataTypes.UUID,
     defaultValue: DataTypes.UUIDV4,

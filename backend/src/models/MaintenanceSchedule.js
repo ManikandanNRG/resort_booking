@@ -1,9 +1,9 @@
 const { DataTypes } = require('sequelize');
-const sequelize = require('../src/config/database');
+const sequelize = require('../config/database');
 const Room = require('./Room');
 const User = require('./User');
 
-const MaintenanceSchedule = sequelize.define('MaintenanceSchedule', {
+const MaintenanceSchedule = sequelize.define('maintenanceschedule', {
   // ... existing id, room_id, scheduled_by fields ...
 
   maintenance_type: {

@@ -1,8 +1,8 @@
 const { DataTypes } = require('sequelize');
-const sequelize = require('../src/config/database');
+const sequelize = require('../config/database');
 const Resort = require('./Resort');
 
-const ResortFacility = sequelize.define('ResortFacility', {
+const ResortFacility = sequelize.define('resortfacility', {
   id: {
     type: DataTypes.UUID,
     defaultValue: DataTypes.UUIDV4,
