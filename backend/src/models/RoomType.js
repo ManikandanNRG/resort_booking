@@ -12,10 +12,9 @@ const RoomType = sequelize.define('roomtype', {
     type: DataTypes.UUID,
     allowNull: false,
     references: {
-      model: Resort,
+      model: Resort,  // Changed back to Resort model reference
       key: 'id'
-    },
-    onDelete: 'CASCADE'
+    }
   },
   name: {
     type: DataTypes.STRING(100),
@@ -139,6 +138,18 @@ const RoomType = sequelize.define('roomtype', {
       fields: ['display_order']
     }
   ]
+});
+
+// Add associations
+RoomType.belongsTo(Resort, {
+  foreignKey: 'resort_id',
+  as: 'resort',
+  onDelete: 'CASCADE'
+});
+
+Resort.hasMany(RoomType, {
+  foreignKey: 'resort_id',
+  as: 'roomtypes'  // Changed from 'roomTypes' to 'roomtypes'
 });
 
 module.exports = RoomType;

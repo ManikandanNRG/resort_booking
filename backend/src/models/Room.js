@@ -1,6 +1,7 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
-const Resort = require('./Resort');
+const resort = require('./Resort');
+const roomtype = require('./RoomType');
 
 const Room = sequelize.define('room', {
   id: {
@@ -12,11 +13,9 @@ const Room = sequelize.define('room', {
     type: DataTypes.UUID,
     allowNull: false,
     references: {
-      model: Resort,
+      model: resort,  // Changed to lowercase
       key: 'id'
-    },
-    onDelete: 'CASCADE',
-    index: true // Added index for better performance
+    }
   },
   name: {
     type: DataTypes.STRING(255),
@@ -63,13 +62,36 @@ const Room = sequelize.define('room', {
 }, {
   timestamps: true,
   underscored: true,
-  freezeTableName: true,
+  freezeTableName: true,  // Add this line to prevent pluralization
   indexes: [
     {
       unique: true,
-      fields: ['resort_id', 'room_number'] // Composite unique index
+      fields: ['resort_id', 'room_number']
     }
   ]
+});
+
+// Update associations with lowercase references
+Room.belongsTo(resort, {
+  foreignKey: 'resort_id',
+  as: 'resort',
+  onDelete: 'CASCADE'
+});
+
+Room.belongsTo(roomtype, {
+  foreignKey: 'room_type_id',
+  as: 'roomtype',
+  onDelete: 'CASCADE'
+});
+
+resort.hasMany(Room, {
+  foreignKey: 'resort_id',
+  as: 'rooms'
+});
+
+roomtype.hasMany(Room, {
+  foreignKey: 'room_type_id',
+  as: 'rooms'
 });
 
 module.exports = Room;

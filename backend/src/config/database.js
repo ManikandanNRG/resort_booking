@@ -3,7 +3,7 @@ const { Sequelize } = require('sequelize');
 const sequelize = new Sequelize('resort_booking', 'postgres', 'postgres', {
   host: 'localhost',
   dialect: 'postgres',
-  logging: false, // Set to console.log to see SQL queries
+  logging: false,
   pool: {
     max: 5,
     min: 0,

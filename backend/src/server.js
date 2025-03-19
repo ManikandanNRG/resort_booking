@@ -2,11 +2,18 @@ const express = require('express');
 const { Sequelize } = require('sequelize');
 const sequelize = require('./config/database');
 
-// Import all models
-require('./models/User');
-require('./models/Resort');
-require('./models/RoomType');
-require('./models/Room');
+// Import all models in correct order
+const User = require('./models/User');
+const Resort = require('./models/Resort');
+const RoomType = require('./models/RoomType');
+const Room = require('./models/Room');
+
+// Define associations
+Resort.belongsTo(User, { foreignKey: 'owner_id' });
+RoomType.belongsTo(Resort, { foreignKey: 'resort_id' });
+Room.belongsTo(Resort, { foreignKey: 'resort_id' });
+Room.belongsTo(RoomType, { foreignKey: 'room_type_id' });
+
 const app = express();
 
 // Sync database before starting the server
@@ -18,8 +25,7 @@ sequelize.authenticate()
   .then(() => {
     console.log('Database synchronized');
     
-    // Start the server after sync
-    const PORT = process.env.PORT || 5000;  // Changed from 3000 to 5000
+    const PORT = process.env.PORT || 5000;
     app.listen(PORT, () => {
       console.log(`Server is running on port ${PORT}`);
     });

@@ -62,4 +62,20 @@ const Booking = sequelize.define('booking', {
   underscored: true
 });
 
+// Add associations
+Booking.belongsTo(User, {
+  foreignKey: 'user_id',
+  as: 'user'
+});
+
+Booking.belongsTo(Resort, {
+  foreignKey: 'resort_id',
+  as: 'resort'
+});
+
+Booking.belongsTo(Room, {
+  foreignKey: 'room_id',
+  as: 'room'
+});
+
 module.exports = Booking;
