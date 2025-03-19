@@ -1,9 +1,11 @@
-# Dependencies (more specific rules first)
-node_modules/
-**/node_modules/
+# Dependencies - strict rules
+node_modules
+**/node_modules
+**/node_modules/**
 /node_modules
-/backend/node_modules
 /client/node_modules
+/backend/node_modules
+*.node
 # Environment files
 .env
 .env.local
