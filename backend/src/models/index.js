@@ -1,10 +1,4 @@
-// Change this line
-const sequelize = require('../src/config/database');
-// To this
-const { Sequelize } = require('sequelize');
-const config = require('../src/config/database');
-const env = process.env.NODE_ENV || 'development';
-const sequelize = new Sequelize(config[env]);
+const sequelize = require('../config/database');
 
 // Import all models
 const Amenity = require('./Amenity');
@@ -29,121 +23,8 @@ const RoomType = require('./RoomType');
 const SubscriptionPlan = require('./SubscriptionPlan');
 const User = require('./User');
 
-// Define associations
-
-// User Associations
-User.hasOne(GuestProfile, { foreignKey: 'user_id', onDelete: 'CASCADE' });
-GuestProfile.belongsTo(User, { foreignKey: 'user_id' });
-
-User.hasMany(AuditLog, { foreignKey: 'user_id', onDelete: 'SET NULL' });
-AuditLog.belongsTo(User, { foreignKey: 'user_id' });
-
-User.hasMany(Booking, { foreignKey: 'user_id', onDelete: 'CASCADE' });
-Booking.belongsTo(User, { foreignKey: 'user_id' });
-
-User.hasMany(Review, { foreignKey: 'user_id', onDelete: 'CASCADE' });
-Review.belongsTo(User, { foreignKey: 'user_id' });
-
-User.hasMany(Notification, { foreignKey: 'user_id', onDelete: 'CASCADE' });
-Notification.belongsTo(User, { foreignKey: 'user_id' });
-
-// Resort Associations
-Resort.belongsTo(SubscriptionPlan, { foreignKey: 'subscription_plan_id' });
-SubscriptionPlan.hasMany(Resort, { foreignKey: 'subscription_plan_id' });
-
-Resort.hasMany(ResortAdmin, { foreignKey: 'resort_id', onDelete: 'CASCADE' });
-ResortAdmin.belongsTo(Resort, { foreignKey: 'resort_id' });
-
-Resort.hasMany(Room, { foreignKey: 'resort_id', onDelete: 'CASCADE' });
-Room.belongsTo(Resort, { foreignKey: 'resort_id' });
-
-// Changed to many-to-many
-Resort.belongsToMany(RoomType, { through: 'ResortRoomTypes', foreignKey: 'resort_id' });
-RoomType.belongsToMany(Resort, { through: 'ResortRoomTypes', foreignKey: 'room_type_id' });
-
-Resort.hasMany(Amenity, { foreignKey: 'resort_id', onDelete: 'CASCADE' });
-Amenity.belongsTo(Resort, { foreignKey: 'resort_id' });
-
-Resort.hasMany(ResortFacility, { foreignKey: 'resort_id', onDelete: 'CASCADE' });
-ResortFacility.belongsTo(Resort, { foreignKey: 'resort_id' });
-
-Resort.hasMany(ResortImage, { foreignKey: 'resort_id', onDelete: 'CASCADE' });
-ResortImage.belongsTo(Resort, { foreignKey: 'resort_id' });
-
-Resort.hasMany(Review, { foreignKey: 'resort_id', onDelete: 'CASCADE' });
-Review.belongsTo(Resort, { foreignKey: 'resort_id' });
-
-Resort.hasMany(Promotion, { foreignKey: 'resort_id', onDelete: 'CASCADE' });
-Promotion.belongsTo(Resort, { foreignKey: 'resort_id' });
-
-Resort.hasOne(AutomatedPricing, { foreignKey: 'resort_id', onDelete: 'CASCADE' });
-AutomatedPricing.belongsTo(Resort, { foreignKey: 'resort_id' });
-
-Resort.hasMany(MarketingTool, { foreignKey: 'resort_id', onDelete: 'CASCADE' });
-MarketingTool.belongsTo(Resort, { foreignKey: 'resort_id' });
-
-// Room Associations
-Room.belongsTo(RoomType, { foreignKey: 'room_type_id' });
-RoomType.hasMany(Room, { foreignKey: 'room_type_id', onDelete: 'CASCADE' });
-
-Room.hasMany(RoomAvailability, { foreignKey: 'room_id', onDelete: 'CASCADE' });
-RoomAvailability.belongsTo(Room, { foreignKey: 'room_id' });
-
-// Changed to many-to-many
-Booking.belongsToMany(Room, { through: 'BookingRooms', foreignKey: 'booking_id' });
-Room.belongsToMany(Booking, { through: 'BookingRooms', foreignKey: 'room_id' });
-
-Room.hasMany(MaintenanceSchedule, { foreignKey: 'room_id', onDelete: 'CASCADE' });
-MaintenanceSchedule.belongsTo(Room, { foreignKey: 'room_id' });
-
-// Booking Associations
-Booking.hasOne(Payment, { foreignKey: 'booking_id', onDelete: 'CASCADE' });
-Payment.belongsTo(Booking, { foreignKey: 'booking_id' });
-
-Booking.hasOne(Review, { foreignKey: 'booking_id', onDelete: 'CASCADE' });
-Review.belongsTo(Booking, { foreignKey: 'booking_id' });
-
-// Review Associations
-Review.hasOne(ReviewResponse, { foreignKey: 'review_id', onDelete: 'CASCADE' });
-ReviewResponse.belongsTo(Review, { foreignKey: 'review_id' });
-
-// RoomType Associations
-RoomType.belongsToMany(Amenity, { through: 'RoomTypeAmenities' });
-Amenity.belongsToMany(RoomType, { through: 'RoomTypeAmenities' });
-
-// ResortAdmin Associations - Changed to hasOne
-User.hasOne(ResortAdmin, { foreignKey: 'user_id', onDelete: 'CASCADE' });
-ResortAdmin.belongsTo(User, { foreignKey: 'user_id' });
-
-// Many-to-Many Relationships
-Promotion.belongsToMany(RoomType, { through: 'PromotionRoomTypes' });
-RoomType.belongsToMany(Promotion, { through: 'PromotionRoomTypes' });
-
-// Update many-to-many relationships
-Resort.belongsToMany(RoomType, { 
-  through: 'ResortRoomTypes', 
-  foreignKey: 'resort_id',
-  timestamps: true 
-});
-
-Booking.belongsToMany(Room, { 
-  through: 'BookingRooms', 
-  foreignKey: 'booking_id',
-  timestamps: true 
-});
-
-RoomType.belongsToMany(Amenity, { 
-  through: 'RoomTypeAmenities',
-  timestamps: true 
-});
-
-Promotion.belongsToMany(RoomType, { 
-  through: 'PromotionRoomTypes',
-  timestamps: true 
-});
-
-// Export models and relationships
-module.exports = {
+// Create db object
+const db = {
   sequelize,
   Amenity,
   AuditLog,
@@ -167,3 +48,100 @@ module.exports = {
   SubscriptionPlan,
   User
 };
+
+// Define associations
+// User Associations
+User.hasOne(GuestProfile, { foreignKey: 'user_id', onDelete: 'CASCADE' });
+GuestProfile.belongsTo(User, { foreignKey: 'user_id' });
+
+db.User.hasMany(db.AuditLog, { foreignKey: 'user_id', onDelete: 'SET NULL' });
+db.AuditLog.belongsTo(db.User, { foreignKey: 'user_id' });
+
+db.User.hasMany(db.Booking, { foreignKey: 'user_id', onDelete: 'CASCADE' });
+db.Booking.belongsTo(db.User, { foreignKey: 'user_id' });
+
+db.User.hasMany(db.Review, { foreignKey: 'user_id', onDelete: 'CASCADE' });
+db.Review.belongsTo(db.User, { foreignKey: 'user_id' });
+
+db.User.hasMany(db.Notification, { foreignKey: 'user_id', onDelete: 'CASCADE' });
+db.Notification.belongsTo(db.User, { foreignKey: 'user_id' });
+
+// Resort Associations
+db.Resort.belongsTo(db.SubscriptionPlan, { foreignKey: 'subscription_plan_id' });
+db.SubscriptionPlan.hasMany(db.Resort, { foreignKey: 'subscription_plan_id' });
+
+db.Resort.hasMany(db.ResortAdmin, { foreignKey: 'resort_id', onDelete: 'CASCADE' });
+db.ResortAdmin.belongsTo(db.Resort, { foreignKey: 'resort_id' });
+
+db.Resort.hasMany(db.Room, { foreignKey: 'resort_id', onDelete: 'CASCADE' });
+db.Room.belongsTo(db.Resort, { foreignKey: 'resort_id' });
+
+// Changed to many-to-many
+db.Resort.belongsToMany(db.RoomType, { through: 'ResortRoomTypes', foreignKey: 'resort_id' });
+db.RoomType.belongsToMany(db.Resort, { through: 'ResortRoomTypes', foreignKey: 'room_type_id' });
+
+db.Resort.hasMany(db.Amenity, { foreignKey: 'resort_id', onDelete: 'CASCADE' });
+db.Amenity.belongsTo(db.Resort, { foreignKey: 'resort_id' });
+
+db.Resort.hasMany(db.ResortFacility, { foreignKey: 'resort_id', onDelete: 'CASCADE' });
+db.ResortFacility.belongsTo(db.Resort, { foreignKey: 'resort_id' });
+
+db.Resort.hasMany(db.ResortImage, { foreignKey: 'resort_id', onDelete: 'CASCADE' });
+db.ResortImage.belongsTo(db.Resort, { foreignKey: 'resort_id' });
+
+db.Resort.hasMany(db.Review, { foreignKey: 'resort_id', onDelete: 'CASCADE' });
+db.Review.belongsTo(db.Resort, { foreignKey: 'resort_id' });
+
+db.Resort.hasMany(db.Promotion, { foreignKey: 'resort_id', onDelete: 'CASCADE' });
+db.Promotion.belongsTo(db.Resort, { foreignKey: 'resort_id' });
+
+db.Resort.hasOne(db.AutomatedPricing, { foreignKey: 'resort_id', onDelete: 'CASCADE' });
+db.AutomatedPricing.belongsTo(db.Resort, { foreignKey: 'resort_id' });
+
+db.Resort.hasMany(db.MarketingTool, { foreignKey: 'resort_id', onDelete: 'CASCADE' });
+db.MarketingTool.belongsTo(db.Resort, { foreignKey: 'resort_id' });
+
+// Room Associations
+db.Room.belongsTo(db.RoomType, { foreignKey: 'room_type_id' });
+db.RoomType.hasMany(db.Room, { foreignKey: 'room_type_id', onDelete: 'CASCADE' });
+
+db.Room.hasMany(db.RoomAvailability, { foreignKey: 'room_id', onDelete: 'CASCADE' });
+db.RoomAvailability.belongsTo(db.Room, { foreignKey: 'room_id' });
+
+// Changed to many-to-many
+db.Booking.belongsToMany(db.Room, { through: 'BookingRooms', foreignKey: 'booking_id' });
+db.Room.belongsToMany(db.Booking, { through: 'BookingRooms', foreignKey: 'room_id' });
+
+db.Room.hasMany(db.MaintenanceSchedule, { foreignKey: 'room_id', onDelete: 'CASCADE' });
+db.MaintenanceSchedule.belongsTo(db.Room, { foreignKey: 'room_id' });
+
+// Booking Associations
+db.Booking.hasOne(db.Payment, { foreignKey: 'booking_id', onDelete: 'CASCADE' });
+db.Payment.belongsTo(db.Booking, { foreignKey: 'booking_id' });
+
+db.Booking.hasOne(db.Review, { foreignKey: 'booking_id', onDelete: 'CASCADE' });
+db.Review.belongsTo(db.Booking, { foreignKey: 'booking_id' });
+
+// Review Associations
+db.Review.hasOne(db.ReviewResponse, { foreignKey: 'review_id', onDelete: 'CASCADE' });
+db.ReviewResponse.belongsTo(db.Review, { foreignKey: 'review_id' });
+
+// RoomType Associations
+db.RoomType.belongsToMany(db.Amenity, { 
+  through: 'RoomTypeAmenities',
+  as: 'Amenities'  // Add explicit alias
+});
+db.Amenity.belongsToMany(db.RoomType, { 
+  through: 'RoomTypeAmenities',
+  as: 'RoomTypes'  // Add explicit alias
+});
+
+// ResortAdmin Associations - Changed to hasOne
+db.User.hasOne(db.ResortAdmin, { foreignKey: 'user_id', onDelete: 'CASCADE' });
+db.ResortAdmin.belongsTo(db.User, { foreignKey: 'user_id' });
+
+// Many-to-Many Relationships
+db.Promotion.belongsToMany(db.RoomType, { through: 'PromotionRoomTypes' });
+db.RoomType.belongsToMany(db.Promotion, { through: 'PromotionRoomTypes' });
+
+module.exports = db;

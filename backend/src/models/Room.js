@@ -13,7 +13,15 @@ const Room = sequelize.define('room', {
     type: DataTypes.UUID,
     allowNull: false,
     references: {
-      model: resort,  // Changed to lowercase
+      model: resort,
+      key: 'id'
+    }
+  },
+  room_type_id: {  // Add this field
+    type: DataTypes.UUID,
+    allowNull: false,
+    references: {
+      model: roomtype,
       key: 'id'
     }
   },
