@@ -1,4 +1,4 @@
-const db = require('../models');
+const db = require('../../../models');
 const seedDatabase = require('./seedData');
 
 async function testSeedData() {
@@ -85,4 +85,4 @@ async function testSeedData() {
   }
 }
 
-testSeedData();
+module.exports = testSeedData;  // Add this line to export the function
