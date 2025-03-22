@@ -45,4 +45,11 @@ const Resort = sequelize.define('resort', { // Changed to lowercase
   underscored: true  // Uses created_at & updated_at instead of createdAt & updatedAt
 });
 
+// Add associations
+Resort.hasMany(require('./RoomType'), {
+  foreignKey: 'resort_id',
+  as: 'roomTypes',  // Using camelCase for consistency
+  onDelete: 'CASCADE'
+});
+
 module.exports = Resort;

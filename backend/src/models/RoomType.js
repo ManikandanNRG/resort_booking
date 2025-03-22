@@ -1,6 +1,5 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
-const Resort = require('./Resort');
 
 const RoomType = sequelize.define('roomtype', {
   id: {
@@ -10,11 +9,7 @@ const RoomType = sequelize.define('roomtype', {
   },
   resort_id: {
     type: DataTypes.UUID,
-    allowNull: false,
-    references: {
-      model: Resort,  // Changed back to Resort model reference
-      key: 'id'
-    }
+    allowNull: false
   },
   name: {
     type: DataTypes.STRING(100),
@@ -140,16 +135,15 @@ const RoomType = sequelize.define('roomtype', {
   ]
 });
 
-// Add associations
-RoomType.belongsTo(Resort, {
-  foreignKey: 'resort_id',
-  as: 'resort',
-  onDelete: 'CASCADE'
-});
-
-Resort.hasMany(RoomType, {
-  foreignKey: 'resort_id',
-  as: 'roomtypes'  // Changed from 'roomTypes' to 'roomtypes'
-});
+// Update association after model definition
+setTimeout(() => {
+  const Resort = require('./Resort');
+  RoomType.belongsTo(Resort, {
+    foreignKey: 'resort_id',
+    as: 'resort',
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE'
+  });
+}, 0);
 
 module.exports = RoomType;

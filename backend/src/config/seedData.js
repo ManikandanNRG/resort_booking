@@ -56,6 +56,85 @@ async function seedDatabase() {
     });
     console.log('✓ Resort Admin created');
 
+    // 5. Create Room Types
+    const roomType = await db.RoomType.create({
+      resort_id: resort.id,
+      name: 'Deluxe Suite',
+      description: 'Luxury room with ocean view',
+      base_price: 299.99,
+      capacity: {
+        adults: 2,
+        children: 2
+      },
+      size_sqft: 500,
+      bed_configuration: {
+        king: 1,
+        sofa: 1
+      },
+      amenities: ['AC', 'WiFi', 'Mini Bar'],
+      status: 'Active'
+    });
+    console.log('✓ Room Type created');
+
+    // 6. Create Room
+    const room = await db.Room.create({
+      resort_id: resort.id,
+      room_type_id: roomType.id,
+      name: 'Deluxe Ocean View 101',
+      room_number: '101',
+      floor: '1',
+      size: 'Standard',
+      price_per_night: roomType.base_price,
+      capacity: 4,
+      status: 'Available',
+      amenities: [],
+      maintenance_status: 'Good'
+    });
+    console.log('✓ Room created');
+
+    // 7. Create Amenity
+    const amenity = await db.Amenity.create({
+      name: 'Ocean View Balcony',
+      description: 'Private balcony with ocean view',
+      category: 'Luxury',  // Must match ENUM values
+      icon: 'https://example.com/icons/balcony.png',
+      is_chargeable: true,
+      price: 50.00,
+      price_type: 'per_night',
+      availability: {
+        always_available: true,
+        schedule: null,
+        max_capacity: null,
+        requires_booking: false,
+        advance_booking_required: false,
+        booking_lead_time_hours: 0
+      },
+      is_active: true,
+      display_order: 1
+    });
+    console.log('✓ Amenity created');
+
+    // Create another amenity (complimentary)
+    const amenity2 = await db.Amenity.create({
+      name: 'WiFi',
+      description: 'High-speed wireless internet',
+      category: 'Basic',
+      icon: 'https://example.com/icons/wifi.png',
+      is_chargeable: false,  // Will automatically set price to 0 and price_type to complimentary
+      is_active: true,
+      display_order: 2
+    });
+    console.log('✓ Basic Amenity created');
+
+    // 8. Create Room Availability
+    const roomAvailability = await db.RoomAvailability.create({
+      room_id: room.id,
+      date: new Date(),
+      status: 'Available',
+      price_modifier: 1.0
+    });
+    console.log('✓ Room Availability created');
+
     console.log('All test data seeded successfully');
     return true;
 
