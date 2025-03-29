@@ -135,15 +135,9 @@ const RoomType = sequelize.define('roomtype', {
   ]
 });
 
-// Update association after model definition
-setTimeout(() => {
-  const Resort = require('./Resort');
-  RoomType.belongsTo(Resort, {
-    foreignKey: 'resort_id',
-    as: 'resort',
-    onDelete: 'CASCADE',
-    onUpdate: 'CASCADE'
-  });
-}, 0);
-
+// Remove the setTimeout
+RoomType.associate = function(models) {
+  RoomType.belongsTo(models.Resort);
+  RoomType.hasMany(models.Room, { as: 'rooms' });
+};
 module.exports = RoomType;
