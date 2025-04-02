@@ -1,7 +1,9 @@
 const express = require('express');
 const cors = require('cors');
 const authRoutes = require('./routes/authRoutes');
-const protectedRoutes = require('./routes/protectedRoutes');  // Add this line
+const protectedRoutes = require('./routes/protectedRoutes');
+const resortRoutes = require('./routes/resortRoutes');
+
 
 const app = express();
 
@@ -11,7 +13,7 @@ app.use(express.json());
 
 // Routes
 app.use('/api/auth', authRoutes);
-app.use('/api', protectedRoutes);  // Add this line
+app.use('/api', resortRoutes);  // Add this line
 
 // Error handling middleware
 app.use((err, req, res, next) => {

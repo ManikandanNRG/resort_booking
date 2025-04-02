@@ -1,4 +1,4 @@
-const db = require('../src/models');  // Updated path
+const db = require('../src/models');
 const { generateToken } = require('../utils/jwt');
 const { hashPassword, comparePassword } = require('../utils/password');
 
@@ -41,18 +41,14 @@ const register = async (req, res) => {
 const login = async (req, res) => {
   try {
     const { email, password } = req.body;
-
-    // Find user
-    console.log('Attempting login for:', email);
+    
     const user = await db.User.findOne({ where: { email } });
     if (!user) {
-      console.log('User not found');
       return res.status(401).json({ message: 'Invalid credentials' });
     }
 
     // Use the model's comparePassword method
     const isValidPassword = await user.comparePassword(password);
-    console.log('Password valid:', isValidPassword);
     if (!isValidPassword) {
       return res.status(401).json({ message: 'Invalid credentials' });
     }
@@ -72,10 +68,9 @@ const login = async (req, res) => {
     });
   } catch (error) {
     console.error('Login error:', error);
-    res.status(500).json({ message: 'Error during login', error: error.message });
+    res.status(500).json({ message: 'Internal server error' });
   }
 };
-
 module.exports = {
   register,
   login
